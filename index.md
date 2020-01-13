@@ -2,7 +2,7 @@
 
 <h2>Importing engine</h2>
 		
-Install the zip file
+Install [quixotic.min.js](https://raw.githubusercontent.com/bahaaaldin214/Quixotic-Engine/master/quixotic.min.js)
 
 In a module js file, import `QuixoticEngine` which is exported as default
 
