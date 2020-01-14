@@ -147,7 +147,7 @@ export default class Quixotic{
     
   }
   
-  buildWorld({objects, classes}){
+  buildWorld({objects, classes, tileMap}){
 
     const world = {
       
@@ -160,6 +160,7 @@ export default class Quixotic{
       classesInfo: {},
       
     };
+    if(tileMap){}
     
     if(!Array.isArray(objects)) return world;
     
