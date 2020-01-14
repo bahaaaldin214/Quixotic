@@ -108,10 +108,9 @@ export default class Quixotic{
     
     const {objectsArray, classesInfo, objects} = this.world;
     
-    const classInfo = classesInfo[className];
+    const classInfo = classesInfo[Class];
 
     if(classInfo){
-
       if(classInfo.args){
         
         instance = new Class(...[...classInfo.args, ...args]);
@@ -126,11 +125,10 @@ export default class Quixotic{
         
         objects[name].push(instance);
         instance.name = name;
-
         
       } else {
         
-       console.warn("didn't save object in world.objects object, object wouldn't detect collision");
+       console.warn("Didn't save object in world.objects object, object wouldn't detect collision");
         
       }
       
@@ -148,140 +146,146 @@ export default class Quixotic{
   }
   
   buildWorld({objects, classes, tileMap}){
-
-    const world = {
-      
-      objects: {},
-      
-      objectsCollisionInfo: {},
-      
-      objectsArray: [],
-      
-      classesInfo: {},
-      
-    };
-    if(tileMap){}
     
-    if(!Array.isArray(objects)) return world;
+    const world = this.world;
     
-    for(let i = objects.length - 1; i > -1; i --){
-      const object = objects[i];
-      const {name, array, amount, position, collision, args, area} = object;
+    if(Array.isArray(objects)){
+      for(let i = objects.length - 1; i > -1; i --){
+        const object = objects[i];
+        const {name, array, amount, position, collision, args, area} = object;
 
-      let createClass;
-      
-      if(!object.class){
+        let createClass;
         
-        createClass = Entity;
-        
-      } else {
-        const className = object.class;
-
-        createClass = classes[className];
-        
-        world.classesInfo[className] = {
-          name,
-          args
-        };
-        
-      }
-      
-      const _args = args ? args : [];
-      
-      let pos;
-      
-      if(collision){
-        
-        world.objectsCollisionInfo[name] = collision;
-        
-      }
-
-      if(position){
-          let p = amount; /*if there is an array of positions, this is use to keep count */
-          switch(position.type){
+        if(!object.class){
           
-            case "random":
-              const {rangeX, rangeY} = position;
-              pos = function(){
-                
-                return [
-                  engineMath.randomBetween(...rangeX),
-                  engineMath.randomBetween(...rangeY)
-                ];
-                
-              };
-              break;
-            case "set":
-              
-              if(array){
-                const positions = position.positions;
-                
-                pos = function(){
-                  p--;
+          createClass = Entity;
+          
+        } else {
+          const className = object.class;
   
-                  return positions[p];
-                };
-                
-              } else {
-                
-                pos = function(){
-                  return position.position;
-                };
-                
-              }
-            
-          }
+          createClass = classes[className];
+          world.classesInfo[className] = {
+            name,
+            args
+          };
+        }
+        
+        const _args = args ? args : [];
+        
+        let pos;
+        
+        if(collision){
+          
+          world.objectsCollisionInfo[name] = collision;
           
         }
-      
-      if(array){
-
-        let _array = [];
+  
+        if(position){
+            let p = amount; /*if there is an array of positions, this is use to keep count */
+            switch(position.type){
+            
+              case "random":
+                const {rangeX, rangeY} = position;
+                pos = function(){
+                  
+                  return [
+                    engineMath.randomBetween(...rangeX),
+                    engineMath.randomBetween(...rangeY)
+                  ];
+                  
+                };
+                break;
+              case "set":
+                
+                if(array){
+                  const positions = position.positions;
+                  
+                  pos = function(){
+                    p--;
+    
+                    return positions[p];
+                  };
+                  
+                } else {
+                  
+                  pos = function(){
+                    return position.position;
+                  };
+                  
+                }
+              
+            }
+            
+          }
         
-        for(let j = amount; j--;){
+        if(array){
+  
+          let _array = [];
+          
+          for(let j = amount; j--;){
+            
+            const instance = this.createEntity(createClass, ..._args);
+            instance.name = name;
+            
+            if(position){
+              instance.move(...pos());
+            }
+            
+            if(area){
+              
+              instance.setSize(area);
+              
+            }
+            _array.push(instance);
+          }
+          world.objects[name] = _array;
+          world.objectsArray.push(..._array);
+  
+        } else {
           
           const instance = this.createEntity(createClass, ..._args);
           instance.name = name;
           
+            
           if(position){
+                
             instance.move(...pos());
           }
           
           if(area){
-            
+    
             instance.setSize(area);
-            
           }
           
-          _array.push(instance);
-
-        }
-        world.objects[name] = _array;
-        world.objectsArray.push(..._array);
-
-      } else {
-        
-        const instance = this.createEntity(createClass, ..._args);
-        instance.name = name;
-        
-          
-        if(position){
-              
-          instance.move(...pos());
+          world.objects[name] = instance;
+          world.objectsArray.push(instance);
         }
         
-        if(area){
-  
-          instance.setSize(area);
-        }
-        
-        world.objects[name] = instance;
-        world.objectsArray.push(instance);
       }
-      
     }
+    
+    if(tileMap){
 
-    return world;
+      const {columns, tiles, values, tileSize, startCoords: [_x, _y]} = tileMap;
+      
+      const rows = tiles.length/columns;
+      let i = tiles.length-1;
+      
+      for(let x = columns; x > -1; x--){
+        
+        for(let y = rows - 1; y > -1; y--){
+
+          const instance = this.createEntity(values[tiles[i]]);
+
+          instance.move(x*tileSize + _x, (-y)*tileSize + _y);
+          instance.setSize(tileSize, tileSize);
+          i--;
+          
+        }
+      }
+    }
+    
+    return;
     
   }
   
@@ -289,7 +293,7 @@ export default class Quixotic{
     
     const {style: {backgroundColor, backgroundImage, stroke}, world, engine: {frameRate, update, render}, setup} = game;
     
-    this.world = this.buildWorld(world);
+    this.buildWorld(world);
 
     this.collisionHandler = new CollisionHandler(this.world);
     
