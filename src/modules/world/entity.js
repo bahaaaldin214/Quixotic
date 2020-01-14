@@ -132,7 +132,7 @@ export default class Entity extends Rect{
 
     const area = this.area;
     const [_w, _h] = area;
-    super._scale([w/_w, h/_h, 1]);
+    super.scale([w/_w, h/_h, 1]);
     
     area[0] = w;
     area[1] = h;
