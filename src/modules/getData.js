@@ -21,7 +21,7 @@ function checkFetch(file, response){
   
 }
 
-export function fetchFile(src){
+export async function fetchFile(src){
   const fetchedFiles = JSON.parse(localStorage.fetchedFiles);
   
   const folders = src.split("/");
