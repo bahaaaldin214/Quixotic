@@ -6,8 +6,6 @@ export function setHomeURL(url){
   homeURL = url;
 }
 
-delete localStorage.fetchedFiles;
-
 if(!localStorage.fetchedFiles) { localStorage.fetchedFiles = `{}`; }
 
 function checkFetch(file, response){
