@@ -399,7 +399,8 @@ game.world = {
       }
     }
   ],
-};```
+};
+```
 
 <h2>Tile Maps</h2>
 
