@@ -369,15 +369,15 @@ game.world = {
 
   objects: [
     {
-    	name: "player",
-      class: "Player",
+			name: "player",
+			class: "Player",
       
       collision: {
 			  
 			  trees: {
 			    
-			    call: "touchedTree",
-			    elastic: true //elastic indicates if it can't go through that object or not
+			   	call: "touchedTree",
+			   	elastic: true //elastic indicates if it can't go through that object or not
 			    
 			  },
 			  
