@@ -64,11 +64,10 @@ const game = {
 
 `game.style` takes care of styling the canvas, style object must be initialized but may be empty.
 
-<h4>other keys:</h4>
-
+#### other keys:
 
 | key             | type           | value                                                 |
-| ----------------| :------------  |  :--------------------------------------------------- |
+| :-------------- | :------------  |  :--------------------------------------------------- |
 | stroke          | Object         | See table below                                       |
 | backgroundColor | Quixotic.color | A quixotic color for the stroke                       |
 | backgroundImage | String         | Link to image location                                |
@@ -157,6 +156,36 @@ game.world.objects = [
 
 Now technically the player object have been created, but it's invisible. Lets fill it with a color.
 
+<h2>Extending Entity Class</h2>
+
+You might wanna extend the Entity class for 2 reasons, collision detection or having custom methods.
+
+```js
+
+import {Entity} from "/js/quixotic/index.js"
+
+class Player extends Entity {
+  constructor(){
+    super();
+    //Must always call super
+  }
+}
+
+game.world = {
+  
+  classes: {
+    Player
+  },
+
+  objects: [
+    {
+    	name: "player",
+      class: "Player"
+    }
+  ],
+};
+
+```
 <h2>Coloring objects</h2>
 
 We color objects in our setup function.
@@ -315,7 +344,62 @@ game.setup = function(engine, display, controller, world){
 
 <h2>Collision</h2>
 
-`TODO:`
+Adding collision to your object was made super simple, first you need to make sure that the objects you create is an instance that extends the Entity class. In this example we would be using the `Player` class which we created earlier, and a `Tree` class we will create now.Tree
+
+```js
+class Player extends Entity {
+  constructor(){
+    super();
+    //Must always call super
+  }
+  touchedTree(tree){
+    tree.remove();
+    //Entity Method wich will remove the object from the game
+  }
+}
+
+class Tree extends Entity {}
+
+game.world = {
+  
+  classes: {
+    Player,
+    Tree
+  },
+
+  objects: [
+    {
+    	name: "player",
+      class: "Player",
+      
+      collision: {
+			  
+			  trees: {
+			    
+			    call: "touchedTree",
+			    elastic: true //elastic indicates if it can't go through that object or not
+			    
+			  },
+			  
+			}
+    },
+    {
+      name: "trees",
+      class: "Tree",
+      
+      array: true,
+      amount: 20,
+      
+      position: {
+        
+        type: "random",
+        rangeX: [-20, 20],
+        rangeY: [-20, 20],
+        
+      }
+    }
+  ],
+};```
 
 <h2>Tile Maps</h2>
 
