@@ -296,9 +296,7 @@ treeObjects.position =  {
 
 <h3>Examples</h3>
 
-
 ```js
-
 game.setup = function(engine, display, controller, world){
   
   const player  = world.objects.player;
@@ -404,7 +402,95 @@ game.world = {
 
 <h2>Tile Maps</h2>
 
-`TODO:`
+I know that some people might think that tile maps are an old style, but with this engine the tile map is only used to position the objects, meaning you can move objects as you wish later on.
+
+<h3>How it works</h3>
+	
+The way it works is it takes 5 keys
+
+<h4> Example </h4>
+Example using `Player, Stone, Tree` classes:
+```js
+game.world = {
+  objects: [
+    {
+			name: "stones",
+			type: "class",
+			class: "Stone",
+			array: true,
+			amount: 0,
+			
+			collision: {
+			  
+			  player: {
+			    
+			    call: "touchedPlayer",
+			    elastic: true
+			    
+			  },
+			}
+			
+		},
+		{
+			name: "trees",
+			type: "class",
+			class: "Tree",
+			array: true,
+			amount: 0,
+			
+			
+			collision: {
+			  
+			  player: {
+			    
+			    call: "touchedPlayer",
+			    elastic: true
+			    
+			  },
+			}
+			
+		},
+		{
+			name: "player",
+			type: "class",
+			class: "Player",
+			
+		},
+	],
+    
+    classes: {
+      Tree,
+      Stone,
+      Player,
+      
+    },
+    
+    tileMap : {
+      
+      columns: 5,
+      tileSize: 5,
+      
+      startCoords: [0, 0],
+      
+      values: [
+        Grass,
+        Tree,
+        Stone],
+        
+      tiles: [
+        1, 1, 1, 1, 1,
+        1, 0, 0, 0, 1,
+        1, 2, 2, 1, 1,
+        1, 0, 1, 0, 1,
+        1, 1, 1, 1, 1,
+        ]
+    }
+    
+  }
+```
+
+In this example, the `Tree` class is the same one we been using, and `Stone` class is the exact same but with a different sprite.
+![Image of example above](https://github.com/bahaaaldin214/Quixotic-Engine/edit/master/examples/images/tileMap.png "TileMap example")
 
 <h2>Display</h2>
 
