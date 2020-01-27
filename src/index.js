@@ -277,7 +277,7 @@ export default class Quixotic{
 
           const instance = this.createEntity(values[tiles[i]]);
 
-          instance.move(x*tileSize + _x, (-y)*tileSize + _y);
+          instance.move(y * tileSize + _y, -x * tileSize + _x);
           instance.setSize(tileSize, tileSize);
           i--;
           
