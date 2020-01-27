@@ -108,7 +108,7 @@ export default class Quixotic{
     
     const {objectsArray, classesInfo, objects} = this.world;
     
-    const classInfo = classesInfo[Class];
+    const classInfo = classesInfo[className];
 
     if(classInfo){
       if(classInfo.args){
