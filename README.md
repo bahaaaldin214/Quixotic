@@ -16,6 +16,8 @@ The Quixotic Game Engine was created with 2 things in mind, spimplicty, and perf
 
 5. Easily create tile maps, with power to edit each tile individually. (tile map builder coming soon!)
 
+6. Easy managable speed, meanning you can slow things down or speed it up as you wish. There's also an event listener for when the speed changes.
+
 ## How it works
 The core of the engine is a display class, this takes care of all the webgl stuff. Then the engine class which takes care of calling update and render functions. A controller class for handling client events. And a game class which glues everything together.
 
