@@ -275,7 +275,7 @@ export default class Quixotic{
             if(Array.isArray(value)){
 
                for(let j = value.length; j--;){
-                 const instance = this.createEntity(values[value[j]]);
+                 const instance = this.createEntity(values[value[value.length - j - 1]]]);
                  instance.move(x * tileSize + _x, -y * tileSize + _y);
                  instance.setSize(tileSize, tileSize);
                  i--;
