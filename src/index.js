@@ -265,25 +265,30 @@ export default class Quixotic{
     }
     
     if(tileMap){
+      const { columns, tiles, values, tileSize, startCoords: [_x, _y] } = tileMap;
+      const rows = tiles.length / columns;
+      let i = tiles.length - 1;
+      for (let x = columns; x > -1; x--) {
+         for (let y = rows - 1; y > -1; y--) {
 
-      const {columns, tiles, values, tileSize, startCoords: [_x, _y]} = tileMap;
-      
-      const rows = tiles.length/columns;
-      let i = tiles.length-1;
-      
-      for(let x = columns; x > -1; x--){
-        
-        for(let y = rows - 1; y > -1; y--){
+            const value = tiles[i];
+            if(Array.isArray(value)){
 
-          const instance = this.createEntity(values[tiles[i]]);
-
-          instance.move(y * tileSize + _y, -x * tileSize + _x);
-          instance.setSize(tileSize, tileSize);
-          i--;
-          
+               for(let j = value.length; j--;){
+                 const instance = this.createEntity(values[value[j]]);
+                 instance.move(y * tileSize + _x, -x * tileSize + _y);
+                 instance.setSize(tileSize, tileSize);
+                 i--;
+                }      
+                continue;
+              }
+              const instance = this.createEntity(values[value]);
+              instance.move(y * tileSize + _x, -x * tileSize + _y);
+              instance.setSize(tileSize, tileSize);
+              i--;
+            }
+          }
         }
-      }
-    }
     
     return;
     
