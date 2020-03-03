@@ -478,7 +478,7 @@ game.world = {
         Stone],
         
       tiles: [
-        1, 1, 1, 1, 1,
+        [0, 1], 1, 1, 1, 1,
         1, 0, 0, 0, 1,
         1, 2, 2, 1, 1,
         1, 0, 1, 0, 1,
@@ -490,6 +490,8 @@ game.world = {
 ```
 
 In this example, the `Tree` class is the same one we been using, and `Stone` class is the exact same but with a different sprite.
+As you might have notices the first value of the tiles array is an array as well that is becaue it's a list of objects on the same position in an order from bottom to top. In this case its a tree tile ontop of a grass tile.
+
 ![Image of example above](https://github.com/bahaaaldin214/Quixotic-Engine/edit/master/examples/images/tileMap.png "TileMap example")
 
 <h2>Display</h2>
