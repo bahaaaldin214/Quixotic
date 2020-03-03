@@ -268,15 +268,15 @@ export default class Quixotic{
       const { columns, tiles, values, tileSize, startCoords: [_x, _y] } = tileMap;
       const rows = tiles.length / columns;
       let i = tiles.length - 1;
-      for (let x = columns; x > -1; x--) {
-         for (let y = rows - 1; y > -1; y--) {
+      for (let y = rows - 1; y > -1; y--) {
+        for (let x = columns; x > -1; x--) {
 
             const value = tiles[i];
             if(Array.isArray(value)){
 
                for(let j = value.length; j--;){
                  const instance = this.createEntity(values[value[j]]);
-                 instance.move(y * tileSize + _x, -x * tileSize + _y);
+                 instance.move(x * tileSize + _x, -y * tileSize + _y);
                  instance.setSize(tileSize, tileSize);
                  i--;
                 }      
