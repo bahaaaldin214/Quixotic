@@ -4,7 +4,7 @@
 		
 Install [quixotic.min.js](https://raw.githubusercontent.com/bahaaaldin214/Quixotic-Engine/master/quixotic.min.js)
 
-##[Examples](https://bahaaaldin214.github.io/Quixotic-Engine/examples)
+##Some Examples [](https://bahaaaldin214.github.io/Quixotic-Engine/examples)
 
 In a module js file, import `QuixoticEngine` which is exported as default
 
