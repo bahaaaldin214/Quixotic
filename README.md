@@ -4,6 +4,8 @@ The Quixotic Game Engine was created with 2 things in mind, spimplicty, and perf
 
 ## [Read docs here](https://bahaaaldin214.github.io/Quixotic-Engine/)
 
+##[Examples](https://bahaaaldin214.github.io/Quixotic-Engine/examples)
+
 ## Why Quixotic
 
 1. Non-tiled-based collision detection, meaning you can detect collision with any game entity.

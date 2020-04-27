@@ -1,0 +1,108 @@
+ {
+	"objects": [
+		{
+			"name": "stones",
+			"class": "Stone",
+			"array": true,
+			"amount": 0,
+			
+			"collision": {
+			  
+			  "player": {
+			    
+			    "call": "touchedPlayer",
+			    "elastic": true
+			    
+			  },
+			  
+			  "enemies": {
+			    
+			    "elastic": true
+			    
+			  }
+			  
+			}
+		},
+		{
+			"name": "trees",
+			"class": "Tree",
+			"array": true,
+			"amount": 0,
+			
+			"collision": {
+			  
+			  "player": {
+			    
+			    "call": "touchedPlayer",
+			    "elastic": true
+			    
+			  },
+			  
+			  "enemies": {
+			    
+			    "elastic": true
+			    
+			  }
+			  
+			}
+			
+		},
+		{
+			"name": "grass",
+			"class": "Grass",
+			"array": true,
+			"amount": 0
+		},
+		{
+			"name": "enemies",
+			"class": "Enemy",
+			"array": true,
+			"amount": 30,
+			
+			"position": {
+				"type": "random",
+				"rangeX": [20, 40],
+				"rangeY": [10, 30]
+			},
+			
+			"collision": {
+			  
+			  "player": {
+			    
+			    "call": "touchedPlayer",
+			    "elastic": true
+			    
+			  },
+			  
+			  "enemies": {
+			    
+			    "elastic": true
+			    
+			  },
+			  
+			  "fireballs": {
+			    
+			    "call": "touchedFireball"
+			    
+			  }
+			  
+			}
+			
+		},
+		{
+			"name": "player",
+			"class": "Player",
+			
+			"args": [
+				"Main"
+			]
+		},
+		{
+			"name": "fireballs",
+			"class": "Fireball",
+			
+			"array": true,
+			"amount": 0
+		}
+	]
+}
