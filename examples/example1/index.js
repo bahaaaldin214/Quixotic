@@ -100,7 +100,7 @@ const game =  {
   
   start: function(engine){
     
-    getJson("/examples/example1/world/default.json").then(world => {
+    getJson("/Quixotic-Engine/examples/example1/world/default.json").then(world => {
       
       game.world.objects = world.objects;
 
@@ -123,10 +123,10 @@ const game =  {
     game.world.objects = world.objects;
     const {player, trees, enemies, fireballs, stones, grass} = world.objects;
 
-    const treeTexture = display.createTexture("/examples/assets/sprites/tree.png");
-    const stoneTexture = display.createTexture("/examples/examples/assets/sprites/stone.jpg");
-    const marioTexture = display.createTexture("/examples/assets/sprites/mario.png");
-    const fireballTexture = display.createTexture("/examples/assets/sprites/fireball.png");
+    const treeTexture = display.createTexture("/Quixotic-Engine/examples/assets/sprites/tree.png");
+    const stoneTexture = display.createTexture("/Quixotic-Engine/examples/assets/sprites/stone.jpg");
+    const marioTexture = display.createTexture("/Quixotic-Engine/examples/assets/sprites/mario.png");
+    const fireballTexture = display.createTexture("/Quixotic-Engine/examples/assets/sprites/fireball.png");
     
     for(let i = trees.length; i--;){
     
