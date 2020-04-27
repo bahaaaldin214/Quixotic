@@ -1,9 +1,38 @@
 <!DOCTYPE html>
 <html>
-<head>
-	<title>The only example</title>
+  <head>
+    <title>Vivet</title>
+    <meta charset="UTF-8">
+    <link href="style/style.css" rel="stylesheet" type="text/css">
+    <script deffer>
+      Math.lerp = (value1, value2, amount) => {
+        amount = amount < 0 ? 0 : amount;
+        amount = amount > 1 ? 1 : amount;
+        return value1 + (value2 - value1) * amount;
+      };
+
+      String.prototype.pop = function() {
+        return this.slice(this.length - 1);
+      }
+
+
+      function $(arg) {
+        let selected = arg.split(" ").map(e => e[0] == "#" ? document.querySelector(e) : document.querySelectorAll(e)).flat(Infinity);
+        
+        return selected.length == 1 ? selected[0] : selected;
+      }
+      
+      $.create = function(element){
+          
+        return document.createElement(element);
+          
+      }
+
+    </script>
 </head>
 <body>
-	<script type="module" src ="./example1/index.js"></script>
+  <script type="module" src="main.js"></script>
+  <canvas id="canvas"></canvas>
 </body>
+
 </html>
