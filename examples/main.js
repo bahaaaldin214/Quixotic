@@ -1,4 +1,4 @@
-import QuixoticEngine from "/quixotic.min.js";
+import QuixoticEngine from "../quixotic.min.js";
 import game from "./example1/index.js";
 
 window.onload = () => {
