@@ -1,4 +1,4 @@
-import {Entity} from "/quixotic.js";
+import {Entity} from "/quixotic.min.js";
 
 export default class Fireball extends Entity{
   
