@@ -6,7 +6,7 @@ import Enemy from "./entities/enemy.js";
 
 import Fireball from "./bullets/fireball.js";
 
-import {Entity, engineMath, getJson, Texture} from "/quixotic.min.js";
+import {Entity, engineMath, getJson, Texture} from "/Quixotic-Engine/quixotic.min.js";
 
 let squareLength = Math.min(innerHeight, innerWidth);
 

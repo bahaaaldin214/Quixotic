@@ -1,4 +1,4 @@
-import {Entity} from "/quixotic.min.js";
+import {Entity} from "/Quixotic-Engine/quixotic.min.js";
 
 export default class Player extends Entity{
   
