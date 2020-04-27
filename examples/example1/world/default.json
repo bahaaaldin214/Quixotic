@@ -57,7 +57,7 @@
 			"name": "enemies",
 			"class": "Enemy",
 			"array": true,
-			"amount": 30,
+			"amount": 20,
 			
 			"position": {
 				"type": "random",
