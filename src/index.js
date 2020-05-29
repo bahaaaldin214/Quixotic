@@ -145,6 +145,45 @@ export default class Quixotic{
 
   }
 
+  createBackground(objects){
+    const buffer = document.createElement("canvas").getContext("2d");
+
+    const bufferRect = this.createEntity();
+    let {zAxis, canvas: {width, height}} = this.display;
+    zAxis--;
+    const halfZ = zAxis/2;
+    let {coords: [x, y], area: [w, h]} = objects[objects.length - 1];
+
+    let [mX, mY, mW, mH] = [x, y, w, h];
+    for(let i = objects.length-1; i--;){
+
+      const {coords: [_x, _y], area: [_w, _h]} = objects[i];
+      x < _x ? _x : x;
+      y < _y ? _y : y;
+
+      if(mX < _x){
+         mX = _x;
+         mW = _w;
+      }
+      if(mY < _y){
+         mY = _y;
+         mH = _h;
+       }
+    }
+
+    buffer.canvas.width = ((mX-halfZ+mW*2)/zAxis+1)*width;
+    buffer.canvas.height = ((mY-halfZ+mH*2)/zAxis+1)*height;
+
+    for(let i = objects.length; i--;){
+
+      const {coords: [_x, _y], area: [_w, _h]} = objects[i];
+      buffer.fillRect(((_x-halfZ-_w*2)/zAxis+1)*width, ((_y-halfZ-_h*2)/zAxis+1)*height, _w*2/zAxis*width, _h*2/zAxis*height);
+    }
+
+    document.body.appendChild(buffer.canvas)
+
+  }
+
   buildWorld({objects, classes, tileMap}){
 
     const world = this.world;
@@ -249,7 +288,7 @@ export default class Quixotic{
 
           if(position){
 
-            instance.move(...pos());
+            instance.move(...position);
           }
 
           if(area){
@@ -276,7 +315,7 @@ export default class Quixotic{
             if(Array.isArray(value)){
 
                for(let j = value.length; j--;){
-                 const instance = this.createEntity(values[value[value.length - j - 1]]]);
+                 const instance = this.createEntity(values[value[value.length - j - 1]]);
                  instance.move(x * tileSize + _x, -y * tileSize + _y);
                  instance.setSize(tileSize, tileSize);
                  i--;
@@ -357,23 +396,25 @@ export default class Quixotic{
 
         const object = objectsArray[length - i - 1];
 
-        const updateFillers = Object.entries(object.updateFillers);
-        const fillersLength = updateFillers.length;
+        if(object.draw){
 
-        if(fillersLength){
+          const updateFillers = Object.entries(object.updateFillers);
+          const fillersLength = updateFillers.length;
 
-          for(let i = fillersLength; i--;){
+          if(fillersLength){
 
-            const [func, args] = updateFillers[fillersLength - i - 1];
+            for(let i = fillersLength; i--;){
 
-            display[func + "Rect"](object, ...args);
+              const [func, args] = updateFillers[fillersLength - i - 1];
+
+              display[func + "Rect"](object, ...args);
+            }
+
+            object.updateFillers = {};
           }
 
-          object.updateFillers = {};
+          display.drawBuffer(object);
         }
-
-        display.drawBuffer(object);
-
       }
 
       const speed = this.speed;
@@ -437,9 +478,9 @@ export default class Quixotic{
 
     window.addEventListener("keydown", controller.keyDownUp);
     window.addEventListener("keyup", controller.keyDownUp);
-    canvas.addEventListener("mousedown", (e) => handleMouse(e, canvas));
-    canvas.addEventListener("mouseup",   (e) => handleMouse(e, canvas));
-    canvas.addEventListener("mousemove", (e) => handleMouse(e, canvas));
+    window.addEventListener("mousedown", (e) => handleMouse(e, canvas));
+    window.addEventListener("mouseup",   (e) => handleMouse(e, canvas));
+    window.addEventListener("mousemove", (e) => handleMouse(e, canvas));
 
     return new Quixotic(display, controller);
   }
