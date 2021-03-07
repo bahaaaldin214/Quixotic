@@ -2,7 +2,7 @@ const engineMath = {
   
   randomBetween: function(min, max){
     
-    return min + Math.random() * (max - min);
+    return Math.floor(Math.random() * (max + (0 - min) + 1) - (0 - min))
     
   },
 
