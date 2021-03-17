@@ -11,10 +11,11 @@ export default class CollisionHandler {
             return;
         }
         const info = world.objectsCollisionInfo[object.name];
+
         const allObjectsObject = world.objects;
         const allObjects = Object.keys(info).map(key => {
             if (typeof allObjectsObject[key] == "undefined") {
-                throw new Error("Trying to get collision info of an undefined(" + key + ")object.");
+                console.warn("Trying to get collision info of an undefined (" + key + ") object.");
             }
             return allObjectsObject[key];
         });
@@ -24,6 +25,10 @@ export default class CollisionHandler {
                 continue;
             }
             if (!Array.isArray(currentObjectsList)) {
+                if(info[currentObjectsList.name]?.range){
+                  this.inRange(object, currentObjectsList, info[currentObjectsList.name]);
+                  continue;
+                }
                 this.checkCollideObjects(object, currentObjectsList, info[currentObjectsList.name]);
                 continue;
             }
@@ -37,6 +42,10 @@ export default class CollisionHandler {
                 if (currentObject == object) {
                     continue;
                 }
+                if(info[name].range){
+                  this.inRange(object, currentObject, info[name]);
+                  continue;
+                }
                 this.checkCollideObjects(object, currentObject, info[name]);
             }
         }
@@ -48,7 +57,7 @@ export default class CollisionHandler {
         }
         object1.checkedCollide.set(object2, true);
         if (angle) {
-            if (info.call) {
+            if (info.call && !info.range) {
                 object1[info.call](object2);
             }
             if (info.elastic) {
@@ -58,32 +67,32 @@ export default class CollisionHandler {
                 const [vx2, vy2] = _velocity;
                 const PI = Math.PI;
                 if ((angle >= 0 && angle < PI / 4) || (angle > 7 / 4 * PI && angle < PI * 2)) {
-                    if (vx1 > 0) {
-                        velocity[0] = -vx1;
+                  if (vx1 > 0) {
+                        velocity[0] = 0;
                     }
                     if (vx2 < 0) {
-                        _velocity[0] = -vx2;
+                        _velocity[0] = 0;
                     }
                 } else if (angle >= PI / 4 && angle < 3 / 4 * PI) {
                     if (vy1 > 0) {
-                        velocity[1] = -vy1;
+                        velocity[1] = 0;
                     }
                     if (vy2 < 0) {
-                        _velocity[1] = -vy2;
+                        _velocity[1] = 0;
                     }
                 } else if (angle >= 3 / 4 * PI && angle < 5 / 4 * PI) {
                     if (vx1 < 0) {
-                        velocity[0] = -vx1;
+                        velocity[0] = 0;
                     }
                     if (vx2 > 0) {
-                        _velocity[0] = -vx2;
+                        _velocity[0] = 0;
                     }
                 } else {
                     if (vy1 < 0) {
-                        velocity[1] = -vy1;
+                        velocity[1] = 0;
                     }
                     if (vy2 > 0) {
-                        _velocity[1] = -vy2;
+                        _velocity[1] = 0;
                     }
                 }
             }
@@ -115,5 +124,32 @@ export default class CollisionHandler {
             }
             return angle;
         }
+    }
+
+    inRange(o, o1, info) {
+      const {range, call, elastic} = info;
+      const [x, y] = o.coords,
+      [rx, ry] = o1.coords,
+      [rw, rh] = o1.area;
+
+      let testX = x,
+      testY = y;
+
+      if (x < rx-rw/2)         testX = rx-rw/2;
+      else if (x > rx+rw/2) testX = rx+rw/2;
+      if (y < ry-rh/2)         testY = ry-rh/2;
+      else if (y > ry+rh/2) testY = ry+rh/2;
+
+      const distX = x-testX;
+      const distY = y-testY;
+      const distance = Math.sqrt( (distX*distX) + (distY*distY) );
+      if (distance <= range) {
+        if(call){
+          o[call](o1);
+        }
+      }
+      if(elastic){
+        this.checkCollideObjects(o1, o, info);
+      }
     }
 }

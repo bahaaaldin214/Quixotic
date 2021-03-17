@@ -6,8 +6,8 @@ export function setHomeURL(url){
   homeURL = url;
 }
 
+delete localStorage.fetchedFiles
 if(!localStorage.fetchedFiles) { localStorage.fetchedFiles = `{}`; }
-
 function checkFetch(file, response){
   if (!response.ok) {
       if(response.status == 404){
@@ -16,71 +16,71 @@ function checkFetch(file, response){
       throw Error(response.statusText);
   }
   return response;
-  
+
 }
 
 export async function fetchFile(src){
   const fetchedFiles = JSON.parse(localStorage.fetchedFiles);
-  
+
   const folders = src.split("/");
   const file = folders[folders.length -1];
-  
+
   let fileDefined = defineHolder(fetchedFiles, folders);
-  
+
   if(fileDefined.next().value){
-    
+
     return fileDefined.next().value;
-    
+
   }
-  
+
   return fetch(src).then(r => checkFetch(file, r)).then(r => r.text()).then(text => {
-    
+
     const definedFile = fileDefined.next(text).value;
-  
+
     localStorage.fetchedFiles = JSON.stringify(fetchedFiles);
 
     return definedFile;
-    
+
   });
 
 }
 
-export default function getFile(src){
-  
+export default async function getFile(src){
+
   let fileDefined = defineHolder(text, src.split("/"));
-  
+
   if(fileDefined.next().value){
     return fileDefined.next().value;
   }
 
   src = homeURL + src;
-    
+
   return fetchFile(src).then(fetchedFile => {
-    
+
     const returnValue = fileDefined.next(fetchedFile).value;
-  
+
     return returnValue;
-    
+
   });
-  
+
 }
 
-export function getJson(src){
-  
+export async function getJson(src){
+
   let fileDefined = defineHolder(json, src.split("/"));
-  
+
   if(fileDefined.next().value){
     return fileDefined.next().value;
   }
-    
+
   return fetchFile(src).then(text => {
-    
+
     const returnValue = fileDefined.next(JSON.parse(text)).value;
 
     return returnValue;
-    
+
   });
-  
+
 }
 
 function *defineHolder(object, folders){
@@ -89,7 +89,7 @@ function *defineHolder(object, folders){
   let lastFolder = object;
   let defined = false;
   let define;
-  
+
   for (let i = 0; i < length; i++) {
     const folder = folders[i];
 
@@ -103,17 +103,17 @@ function *defineHolder(object, folders){
         define = yield false;
 
         continue;
-        
+
       }
     }
     if (!lastFolder[folder]) {
       lastFolder[folder] = {name: folder};
-   
+
     }
 
     lastFolder = lastFolder[folder];
   }
-  
+
   if(defined) return lastFolder[folders[length - 1]];
 
   lastFolder[folders[length - 1]] = define;

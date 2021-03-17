@@ -65,7 +65,7 @@ export default class Quixotic{
 
     const world = this.world;
 
-    const {collision, name, objects, array, args} = info;
+    const {collision, name, array, args, amount, area, position} = info;
 
     if(collision){
 
@@ -81,10 +81,53 @@ export default class Quixotic{
 
     }
     const classInfo = {
-      name,
+      name
     };
 
+    if(position){
+      let pos = function(){}
+
+      switch(position.type){
+
+        case "random":
+          const {rangeX, rangeY} = position;
+          pos = function(){
+
+            return [
+              engineMath.randomBetween(...rangeX),
+              engineMath.randomBetween(...rangeY)
+            ];
+
+          };
+          break;
+          case "set":
+
+          if(array){
+            const positions = position.positions;
+
+            pos = function(){
+              this.p--;
+
+              return positions[p];
+            };
+            pos.p = amount;
+
+          } else {
+
+            pos = function(){
+              return position.position;
+            };
+
+          }
+
+        }
+
+      classInfo.position = pos;
+    }
+
     if(args) classInfo.args = args;
+
+    if(area) classInfo.area = area;
 
     world.classesInfo[Class.name] = classInfo;
   }
@@ -128,8 +171,8 @@ export default class Quixotic{
 
       } else {
 
-       console.warn("Didn't save object in world.objects object, object wouldn't detect collision");
-
+        objects[name] = instance;
+        instance.name = name;
       }
 
     } else {
@@ -137,8 +180,10 @@ export default class Quixotic{
        instance = new Class(...args);
 
     }
+    const [x, y] = classInfo?.position ? classInfo.position() : [0, 0];
+    const [w, h] = classInfo?.area ? classInfo.area : [5, 5];
 
-    instance.setup(5, 5, ...display.getRectInfo(0, 0, rect, stroke, display.randomColor()));
+    instance.setup(w, h, ...display.getRectInfo(x, y, rect, stroke, display.randomColor()));
     objectsArray.push(instance);
 
     return instance;
@@ -152,7 +197,7 @@ export default class Quixotic{
     if(Array.isArray(objects)){
       for(let i = objects.length - 1; i > -1; i --){
         const object = objects[i];
-        const {name, array, amount, position, collision, args, area} = object;
+        const {name, array, amount, args} = object;
 
         let createClass;
 
@@ -161,62 +206,11 @@ export default class Quixotic{
           createClass = Entity;
 
         } else {
-          const className = object.class;
-
-          createClass = classes[className];
-          world.classesInfo[className] = {
-            name,
-            args
-          };
+          createClass = classes[object.class];
+          this.newClass(createClass, object);
         }
 
         const _args = args ? args : [];
-
-        let pos;
-
-        if(collision){
-
-          world.objectsCollisionInfo[name] = collision;
-
-        }
-
-        if(position){
-            let p = amount; /*if there is an array of positions, this is use to keep count */
-            switch(position.type){
-
-              case "random":
-                const {rangeX, rangeY} = position;
-                pos = function(){
-
-                  return [
-                    engineMath.randomBetween(...rangeX),
-                    engineMath.randomBetween(...rangeY)
-                  ];
-
-                };
-                break;
-              case "set":
-
-                if(array){
-                  const positions = position.positions;
-
-                  pos = function(){
-                    p--;
-
-                    return positions[p];
-                  };
-
-                } else {
-
-                  pos = function(){
-                    return position.position;
-                  };
-
-                }
-
-            }
-
-          }
 
         if(array){
 
@@ -226,16 +220,6 @@ export default class Quixotic{
 
             const instance = this.createEntity(createClass, ..._args);
             instance.name = name;
-
-            if(position){
-              instance.move(...pos());
-            }
-
-            if(area){
-
-              instance.setSize(area);
-
-            }
             _array.push(instance);
           }
           world.objects[name] = _array;
@@ -245,17 +229,6 @@ export default class Quixotic{
 
           const instance = this.createEntity(createClass, ..._args);
           instance.name = name;
-
-
-          if(position){
-
-            instance.move(...pos());
-          }
-
-          if(area){
-
-            instance.setSize(area);
-          }
 
           world.objects[name] = instance;
           world.objectsArray.push(instance);
