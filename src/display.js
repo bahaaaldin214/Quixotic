@@ -190,7 +190,7 @@ export default class Display{
 
   polygon(rect, x, y, circle){
 
-    let stroke = rect;
+    let stroke = circle ? circle : rect;
 
     x = x ? x : 0;
     y = y ? y : 0;
@@ -294,6 +294,7 @@ export default class Display{
 
     return square;
   }
+
   circle(x, y, r) {
 
     const points = [];
@@ -302,14 +303,19 @@ export default class Display{
     for (let i = 0; i < 361; i++){
       const k = i*Math.PI/180;
       points.push(
-          Math.sin(k)*(r-2), Math.cos(k)*(r-2),
+          0, 0,
           r*Math.sin(k),
           r*Math.cos(k)
         );
 
+        stroke.push(
+            Math.sin(k)*r, Math.cos(k)*r,
+            (r+1)*Math.sin(k),
+            (r+1)*Math.cos(k),
+          );
     }
 
-    return this.polygon(points, x, y, true);
+    return this.polygon(stroke, x, y, stroke);
 
   }
   createRectPos(w, h){

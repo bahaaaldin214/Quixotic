@@ -31,10 +31,11 @@ export default class Controller{
     }
 
   }
+
   mouseDownUpMove(x, y, e){
 
-    if(e.type == "mousemove") { this.mouseDown.x = x; this.mouseDown.y = y; return }
-    this.mouseDown = {x: x, y: y, down: e.type == "mousedown"};
+    const last = this.mouseDown.current;
+    this.mouseDown = {x, y, last, current: e.type };
     return this;
   }
 
@@ -43,7 +44,7 @@ export default class Controller{
   }
 
   detachMouseButton(i){
-    console.log("fix maybe?");
+    console.warn("fix maybe?");
     this.mouseButtons.splice(i);
   }
 
@@ -78,7 +79,8 @@ export default class Controller{
       }
 
     }
-    if(mouseDown.down){
+
+    if(mouseDown.current == "mouseup"){
 
       for(let i = mouseButtons.length;i--;){
         let {x, y} = mouseDown;
@@ -90,6 +92,6 @@ export default class Controller{
         }
       }
     }
-
+    mouseDown.current = null;
   }
 }

@@ -1,10 +1,12 @@
 import Display from "./display.js";
 import Engine from "./engine.js";
 import Controller from "./controller.js";
-import Entity from "./modules/world/entity.js";
-import engineMath from "./modules/engineMath.js";
 import CollisionHandler from "./collisionHandler.js";
 
+import Entity from "./modules/world/entity.js";
+import ClearableWeakMap from "./modules/clearableWeakMap.js"
+
+import engineMath from "./modules/engineMath.js";
 import {getJson, setHomeURL} from "./modules/getData.js";
 import {Rect, Texture, Camera, SpriteSheet} from "./modules/webgl/entities.js";
 
@@ -154,32 +156,21 @@ export default class Quixotic{
     const classInfo = classesInfo[className];
 
     if(classInfo){
-      if(classInfo.args){
-
-        instance = new Class(...[...classInfo.args, ...args]);
-
-      } else {
-        instance = new Class(...args);
-      }
+      instance = classInfo.args ? new Class(...[...classInfo.args, ...args]) : new Class(...args);
 
       const name = classInfo.name;
+      instance.name = name;
 
       if(Array.isArray(objects[name])){
-
         objects[name].push(instance);
-        instance.name = name;
-
       } else {
-
-        objects[name] = instance;
-        instance.name = name;
+        objects[name] = objects[name] ? [objects[name], instance]: instance;
       }
 
     } else {
-
        instance = new Class(...args);
-
     }
+
     const [x, y] = classInfo?.position ? classInfo.position() : [0, 0];
     const [w, h] = classInfo?.area ? classInfo.area : [5, 5];
 
@@ -248,8 +239,8 @@ export default class Quixotic{
             if(!value) continue;
             if(Array.isArray(value)){
 
-               for(let j = value.length; j--;){
-                 const instance = this.createEntity(values[value[value.length - j - 1]]);
+               for(let z = value.length; z--;){
+                 const instance = this.createEntity(values[value[value.length - z - 1]]);
                  instance.move(x * tileSize + _x, -y * tileSize + _y);
                  instance.setSize(tileSize, tileSize);
                  i--;
@@ -419,4 +410,4 @@ export default class Quixotic{
 
 }
 
-export {Entity, engineMath, Rect, Texture, Camera, getJson, SpriteSheet};
+export {Entity, engineMath, Rect, Texture, Camera, getJson, SpriteSheet, ClearableWeakMap};
